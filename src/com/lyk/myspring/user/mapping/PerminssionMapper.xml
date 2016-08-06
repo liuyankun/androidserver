@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyk.myspring.user.dao.IPerminssionDao" >
+  <resultMap id="BaseResultMap" type="com.lyk.myspring.user.model.Perminssion" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="token" property="token" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="descreption" property="descreption" jdbcType="VARCHAR" />
+    <collection property="rolePermissions" column="id" select="com.lyk.myspring.user.dao.IRolePermissionDao.selectByPermissionId"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, token, url, descreption
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_permission
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_permission
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.lyk.myspring.user.model.Perminssion" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_permission (id, token, url, 
+      descreption)
+    values (#{id,jdbcType=INTEGER}, #{token,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{descreption,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyk.myspring.user.model.Perminssion" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_permission
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      <if test="token != null" >
+        token,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="descreption != null" >
+        descreption,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=INTEGER},
+      <if test="token != null" >
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="descreption != null" >
+        #{descreption,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyk.myspring.user.model.Perminssion" >
+    update t_permission
+    <set >
+      <if test="token != null" >
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="descreption != null" >
+        descreption = #{descreption,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyk.myspring.user.model.Perminssion" >
+    update t_permission
+    set token = #{token,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      descreption = #{descreption,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
